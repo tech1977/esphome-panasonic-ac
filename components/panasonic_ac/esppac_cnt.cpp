@@ -267,6 +267,13 @@ void PanasonicACCNT::handle_cmd() {
  */
 
 bool PanasonicACCNT::verify_packet() {
+  if (this->rx_buffer_.size() == 1 && this->rx_buffer_[0] == 0) {
+    ESP_LOGW(TAG, "Package '00' Received, only buffer cleared");
+
+    this->rx_buffer_.clear();  // Reset buffer
+    return true;
+  }
+
   if (this->rx_buffer_.size() < 12) {
     ESP_LOGW(TAG, "Dropping invalid packet (length)");
 
